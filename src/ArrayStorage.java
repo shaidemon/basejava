@@ -3,19 +3,17 @@
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
-    int cursor = 0; //last-resume position in storage;
+    //last-resume position in storage;
+    int cursor = 0;
 
     void clear() {
-        if (cursor > 0) {
-            for (int i = 0; i < cursor; i++) {
-                storage[i] = null;
-            }
-            cursor = 0;
+        for (int i = 0; i < cursor; i++) {
+            storage[i] = null;
         }
+        cursor = 0;
     }
 
     void save(Resume resume) {
-        storage[cursor] = new Resume();
         storage[cursor] = resume;
         cursor++;
     }
@@ -32,15 +30,22 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
+        boolean deleted = false;
         for (int i = 0; i < cursor; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 storage[i] = storage[i + 1];
+                deleted = true;
                 if (storage[i] != null) {
+                    //pushing rest resumes to the left by forcing equals(uuid) condition
                     uuid = storage[i].uuid;
                 }
             }
         }
-        cursor--;
+        // resume deleted ? move cursor left
+        if (deleted) {
+            cursor--;
+        }
+
     }
 
     /**
