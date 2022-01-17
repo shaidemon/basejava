@@ -33,16 +33,14 @@ public class ArrayStorage {
         boolean deleted = false;
         for (int i = 0; i < cursor; i++) {
             if (storage[i].uuid.equals(uuid)) {
-                storage[i] = storage[i + 1];
+                // replace deleted element by last value
+                 storage[i] = storage[cursor - 1];
                 deleted = true;
-                if (storage[i] != null) {
-                    //pushing rest resumes to the left by forcing equals(uuid) condition
-                    uuid = storage[i].uuid;
-                }
             }
         }
-        // resume deleted ? move cursor left
+        // resume deleted ? last resume to null & move cursor left
         if (deleted) {
+            storage[cursor-1] = null;
             cursor--;
         }
 
@@ -53,7 +51,7 @@ public class ArrayStorage {
      */
     Resume[] getAll() {
         Resume[] allResumes = new Resume[cursor];
-        for (int i = 0; i < cursor; i++) allResumes[i] = storage[i];
+        System.arraycopy(storage, 0, allResumes, 0, cursor);
         return allResumes;
     }
 
