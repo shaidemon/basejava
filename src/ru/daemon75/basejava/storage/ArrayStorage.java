@@ -18,31 +18,55 @@ public class ArrayStorage {
     }
 
      public void save(Resume resume) {
-        storage[size] = resume;
-        size++;
+        if (!isPresent(resume.getUuid()) && size < storage.length) {
+            storage[size] = resume;
+            size++;
+        } else if (isPresent(resume.getUuid())) {
+            System.out.println(" Sorry, this resume already present in storage. Can't save the resume");
+        } else if (size >= storage.length) {
+            System.out.println("Sorry, exceeded the limit of storage. Can't save the resume");
+        }
+    }
+
+    public void update(Resume resume) {
+        if (isPresent(resume.getUuid())) {
+            for (int i = 0; i < size; i++) {
+                if (storage[i].getUuid().equals(resume.getUuid())) {
+                    storage[i]=resume;
+                }
+            }
+        } else {
+            System.out.println("Sorry, this resume is not present on storage. Nothing to update");
+        }
     }
 
      public Resume get(String uuid) {
-        if (storage[0] != null) {
+        if (isPresent(uuid)) {
             for (int i = 0; i < size; i++) {
                 if (storage[i].getUuid().equals(uuid)) {
                     return storage[i];
                 }
             }
+        } else {
+        System.out.println("Sorry, resume not found!");
         }
         return null;
     }
 
      public void delete(String uuid) {
-        for (int i = 0; i < size; i++) {
-            if (storage[i].getUuid().equals(uuid)) {
-                // replace deleted element by last value
-                storage[i] = storage[size - 1];
-                // last resume to null & reduce size
-                storage[size -1] = null;
-                size--;
-            }
-        }
+       if (isPresent(uuid)) {
+           for (int i = 0; i < size; i++) {
+               if (storage[i].getUuid().equals(uuid)) {
+                   // replace deleted element by last value
+                   storage[i] = storage[size - 1];
+                   // last resume to null & reduce size
+                   storage[size -1] = null;
+                   size--;
+               }
+           }
+       } else {
+           System.out.println("Sorry, this resume not present in storage. Nothing to delete");
+       }
     }
 
     /**
@@ -57,4 +81,16 @@ public class ArrayStorage {
     public int size() {
         return size;
     }
+
+    boolean isPresent(String uuid) {
+        boolean check = false;
+        for (int i = 0; i <size ; i++) {
+            if (storage[i].getUuid().equals(uuid)) {
+                check = true;
+                break;
+            }
+        }
+        return check;
+    }
 }
+
