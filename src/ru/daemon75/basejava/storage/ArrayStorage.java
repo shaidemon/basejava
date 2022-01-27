@@ -8,9 +8,9 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-    //last-resume position in storage;
-    int size = 0;
+    private Resume[] storage = new Resume[10000];
+    //number of resumes;
+    private int size = 0;
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -18,54 +18,48 @@ public class ArrayStorage {
     }
 
      public void save(Resume resume) {
-        if (!isPresent(resume.getUuid()) && size < storage.length) {
+        if (size >= storage.length) {
+            System.out.println("Sorry, exceeded the limit of storage. Can't save the resume " + resume.getUuid());
+        } else if (check(resume.getUuid()) >= 0) {
+            System.out.println(" Sorry, resume " + resume.getUuid() + " already present in storage.");
+        } else {
             storage[size] = resume;
             size++;
-        } else if (isPresent(resume.getUuid())) {
-            System.out.println(" Sorry, this resume already present in storage. Can't save the resume");
-        } else if (size >= storage.length) {
-            System.out.println("Sorry, exceeded the limit of storage. Can't save the resume");
+            System.out.printf("resume %s saved \n", resume.getUuid());
         }
     }
 
     public void update(Resume resume) {
-        if (isPresent(resume.getUuid())) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(resume.getUuid())) {
-                    storage[i]=resume;
-                }
-            }
+        int i = check(resume.getUuid());
+        if (i >=0) {
+            storage[i]=resume;
+            System.out.printf("Resume %s updated \n", resume.getUuid());
         } else {
-            System.out.println("Sorry, this resume is not present on storage. Nothing to update");
+            System.out.println("Sorry, resume " + resume.getUuid() + " is not present on storage. Nothing to update");
         }
     }
 
      public Resume get(String uuid) {
-        if (isPresent(uuid)) {
-            for (int i = 0; i < size; i++) {
-                if (storage[i].getUuid().equals(uuid)) {
-                    return storage[i];
-                }
-            }
+         int i = check(uuid);
+         if (i >=0) {
+             return storage[i];
         } else {
-        System.out.println("Sorry, resume not found!");
+        System.out.println("Sorry, resume " + uuid + " not found!");
         }
         return null;
     }
 
      public void delete(String uuid) {
-       if (isPresent(uuid)) {
-           for (int i = 0; i < size; i++) {
-               if (storage[i].getUuid().equals(uuid)) {
+       int i = check(uuid);
+        if (i >=0) {
                    // replace deleted element by last value
                    storage[i] = storage[size - 1];
                    // last resume to null & reduce size
                    storage[size -1] = null;
                    size--;
-               }
-           }
+            System.out.printf("Resume %s deleted \n", uuid);
        } else {
-           System.out.println("Sorry, this resume not present in storage. Nothing to delete");
+           System.out.println("Sorry, resume " + uuid + " not present in storage. Nothing to delete");
        }
     }
 
@@ -82,11 +76,11 @@ public class ArrayStorage {
         return size;
     }
 
-    boolean isPresent(String uuid) {
-        boolean check = false;
+    int check(String uuid) {
+        int check = -1;
         for (int i = 0; i <size ; i++) {
             if (storage[i].getUuid().equals(uuid)) {
-                check = true;
+                check = i;
                 break;
             }
         }
