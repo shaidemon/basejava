@@ -2,19 +2,11 @@ package ru.daemon75.basejava.storage;
 
 import ru.daemon75.basejava.model.Resume;
 
-import java.util.Arrays;
-
 /**
  * Array based storage for Resumes
  */
 public class ArrayStorage extends AbstractArrayClass {
-
-
-    public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
-    }
-
+    @Override
     public void save(Resume resume) {
         String uuid = resume.getUuid();
         if (size >= STORAGE_LIMIT) {
@@ -28,17 +20,7 @@ public class ArrayStorage extends AbstractArrayClass {
         }
     }
 
-    public void update(Resume resume) {
-        String uuid = resume.getUuid();
-        int index = findIndex(uuid);
-        if (index >= 0) {
-            storage[index] = resume;
-            System.out.printf("Resume %s updated \n", uuid);
-        } else {
-            System.out.printf("Sorry, resume %s is not present on storage. Nothing to update \n", uuid);
-        }
-    }
-
+    @Override
     public void delete(String uuid) {
         int index = findIndex(uuid);
         if (index >= 0) {
@@ -53,10 +35,7 @@ public class ArrayStorage extends AbstractArrayClass {
         }
     }
 
-    public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
-    }
-
+    @Override
     protected int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
@@ -65,5 +44,6 @@ public class ArrayStorage extends AbstractArrayClass {
         }
         return -1;
     }
+
 }
 

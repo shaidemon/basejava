@@ -1,19 +1,21 @@
 import ru.daemon75.basejava.model.Resume;
-import ru.daemon75.basejava.storage.ArrayStorage;
+//import ru.daemon75.basejava.storage.ArrayStorage;
+import ru.daemon75.basejava.storage.SortedArrayStorage;
+import ru.daemon75.basejava.storage.Storage;
 
 /**
  * Test for your ru.daemon75.basejava.storage.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
-    static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
+    static final Storage ARRAY_STORAGE = new SortedArrayStorage();
 
     public static void main(String[] args) {
         final Resume r1 = new Resume();
-        r1.setUuid("uuid1");
+        r1.setUuid("uuid2");
         final Resume r2 = new Resume();
-        r2.setUuid("uuid2");
+        r2.setUuid("uuid3");
         final Resume r3 = new Resume();
-        r3.setUuid("uuid3");
+        r3.setUuid("uuid1");
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
