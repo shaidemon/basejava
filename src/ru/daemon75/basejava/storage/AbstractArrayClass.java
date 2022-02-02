@@ -14,10 +14,26 @@ public abstract class AbstractArrayClass implements Storage {
         return size;
     }
 
-    public abstract void save(Resume resume);
+    //template method pattern here, doXxx()-have_to_override operations
+    public final void save(Resume resume) {
+        String uuid = resume.getUuid();
+        int index = doFindIndex(uuid);
+        if (size >= STORAGE_LIMIT) {
+            System.out.printf("Sorry, exceeded the limit of storage. Can't save the resume %s \n", uuid);
+        } else {
+            if (index >= 0) {
+                System.out.printf(" Sorry, resume %s already present in storage.\n", uuid);
+            } else {
+                doAddElement(resume, index);
+                size++;
+                System.out.printf("resume %s saved \n", uuid);
+            }
+        }
+    }
 
-    public Resume get(String uuid) {
-        int index = findIndex(uuid);
+    //template method pattern here, doXxx()-have_to_override operations
+    public final Resume get(String uuid) {
+        int index = doFindIndex(uuid);
         if (index >= 0) {
             return storage[index];
         }
@@ -31,7 +47,7 @@ public abstract class AbstractArrayClass implements Storage {
 
     public void update(Resume resume) {
         String uuid = resume.getUuid();
-        int index = findIndex(uuid);
+        int index = doFindIndex(uuid);
         if (index >= 0) {
             storage[index] = resume;
             System.out.printf("Resume %s updated \n", uuid);
@@ -40,12 +56,27 @@ public abstract class AbstractArrayClass implements Storage {
         }
     }
 
-    public abstract void delete(String uuid);
+    //template method pattern here, doXxx()-have_to_override operations
+    public final void delete(String uuid) {
+        int index = doFindIndex(uuid);
+        if (index < 0) {
+            System.out.printf("Sorry, resume %s not present in storage. Nothing to delete \n", uuid);
+        } else {
+            doReplaceElement(index);
+            size--;
+            System.out.printf("Resume %s deleted \n", uuid);
+        }
+    }
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    protected abstract int findIndex(String uuid);
+    //doXxx()-have_to_override operations
+    protected abstract int doFindIndex(String uuid);
+
+    protected abstract void doAddElement(Resume resume, int index);
+
+    protected abstract void doReplaceElement(int index);
 }
