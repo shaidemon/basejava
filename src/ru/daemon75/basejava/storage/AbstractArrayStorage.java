@@ -17,7 +17,7 @@ public abstract class AbstractArrayStorage implements Storage {
     //template method pattern here
     public final void save(Resume resume) {
         String uuid = resume.getUuid();
-        int index = FindIndex(uuid);
+        int index = findIndex(uuid);
         if (size >= STORAGE_LIMIT) {
             System.out.printf("Sorry, exceeded the limit of storage. Can't save the resume %s \n", uuid);
         } else if (index >= 0) {
@@ -32,7 +32,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     //template method pattern here
     public final Resume get(String uuid) {
-        int index = FindIndex(uuid);
+        int index = findIndex(uuid);
         if (index >= 0) {
             return storage[index];
         }
@@ -46,7 +46,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void update(Resume resume) {
         String uuid = resume.getUuid();
-        int index = FindIndex(uuid);
+        int index = findIndex(uuid);
         if (index >= 0) {
             storage[index] = resume;
             System.out.printf("Resume %s updated \n", uuid);
@@ -57,7 +57,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     //template method pattern here
     public final void delete(String uuid) {
-        int index = FindIndex(uuid);
+        int index = findIndex(uuid);
         if (index < 0) {
             System.out.printf("Sorry, resume %s not present in storage. Nothing to delete \n", uuid);
         } else {
@@ -75,7 +75,7 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
 
-    protected abstract int FindIndex(String uuid);
+    protected abstract int findIndex(String uuid);
 
     protected abstract void saveToArray(Resume resume, int index);
 
