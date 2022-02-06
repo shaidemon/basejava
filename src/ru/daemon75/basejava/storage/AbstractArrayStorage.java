@@ -1,5 +1,8 @@
 package ru.daemon75.basejava.storage;
 
+import ru.daemon75.basejava.exception.ExistStorageException;
+import ru.daemon75.basejava.exception.NotExistStorageException;
+import ru.daemon75.basejava.exception.StorageException;
 import ru.daemon75.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -19,9 +22,9 @@ public abstract class AbstractArrayStorage implements Storage {
         String uuid = resume.getUuid();
         int index = findIndex(uuid);
         if (size >= STORAGE_LIMIT) {
-            System.out.printf("Sorry, exceeded the limit of storage. Can't save the resume %s \n", uuid);
+            throw new StorageException("Sorry, exceeded the limit of storage. Can't save the resume", uuid);
         } else if (index >= 0) {
-            System.out.printf(" Sorry, resume %s already present in storage.\n", uuid);
+            throw new ExistStorageException(uuid);
         } else {
             saveToArray(resume, index);
             size++;
@@ -36,8 +39,7 @@ public abstract class AbstractArrayStorage implements Storage {
         if (index >= 0) {
             return storage[index];
         }
-        System.out.printf("Sorry, resume %s not found! \n", uuid);
-        return null;
+        throw new NotExistStorageException(uuid);
     }
 
     public Resume[] getAll() {
@@ -51,7 +53,7 @@ public abstract class AbstractArrayStorage implements Storage {
             storage[index] = resume;
             System.out.printf("Resume %s updated \n", uuid);
         } else {
-            System.out.printf("Sorry, resume %s is not present on storage. Nothing to update \n", uuid);
+            throw new NotExistStorageException(uuid);
         }
     }
 
@@ -59,7 +61,7 @@ public abstract class AbstractArrayStorage implements Storage {
     public final void delete(String uuid) {
         int index = findIndex(uuid);
         if (index < 0) {
-            System.out.printf("Sorry, resume %s not present in storage. Nothing to delete \n", uuid);
+            throw new NotExistStorageException(uuid);
         } else {
             deleteFromArray(index);
             // last resume to null
