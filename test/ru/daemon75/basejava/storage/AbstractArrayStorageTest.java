@@ -123,16 +123,6 @@ abstract class AbstractArrayStorageTest {
         assertArrayEquals(new Resume[0], storage.getAll());
     }
 
-/*
-    void monitoring() {
-        System.out.println("\nGet All");
-        for (Resume r : storage.getAll()) {
-            System.out.println(r);
-        }
-        System.out.println("Size: " + storage.size() + "\n");
-    }
-*/
-
     void fillStorage() throws StorageException {
         for (int i = initSize; i < STORAGE_LIMIT; i++) {
             storage.save(new Resume());
