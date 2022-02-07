@@ -96,9 +96,7 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void delete() {
-        Resume[] expected = new Resume[2];
-        expected[0] = new Resume(UUID_1);
-        expected[1] = new Resume(UUID_2);
+        Resume[] expected = new Resume[]{new Resume(UUID_1), new Resume(UUID_2)};
         storage.delete(UUID_3);
         assertArrayEquals(expected, storage.getAll());
         // size decreased
