@@ -115,7 +115,7 @@ public abstract class AbstractArrayStorageTest {
     @Test
     void clear() {
         storage.clear();
-        Assertions.assertArrayEquals(new Resume[2], storage.getAll());
+        Assertions.assertArrayEquals(new Resume[0], storage.getAll());
     }
 
     void monitoring() {
