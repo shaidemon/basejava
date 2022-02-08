@@ -17,11 +17,24 @@ import static ru.daemon75.basejava.storage.AbstractArrayStorage.STORAGE_LIMIT;
 abstract class AbstractArrayStorageTest {
 
     protected Storage storage;
-    protected int initSize;
+    private int initSize;
 
-    protected static final String UUID_1 = "uuid1";
-    protected static final String UUID_2 = "uuid2";
-    protected static final String UUID_3 = "uuid3";
+    private static final String UUID_1 = "uuid1";
+    private static final String UUID_2 = "uuid2";
+    private static final String UUID_3 = "uuid3";
+    private static final String UUID_TEST = "uuid0_test";
+
+    private static final Resume RESUME_1;
+    private static final Resume RESUME_2;
+    private static final Resume RESUME_3;
+    private static final Resume RESUME_TEST;
+
+    static {
+        RESUME_1 = new Resume(UUID_1);
+        RESUME_2 = new Resume(UUID_2);
+        RESUME_3 = new Resume(UUID_3);
+        RESUME_TEST = new Resume(UUID_TEST);
+    }
 
     protected AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
@@ -30,9 +43,9 @@ abstract class AbstractArrayStorageTest {
     @BeforeEach
     protected void init() {
         storage.clear();
-        storage.save(new Resume(UUID_1));
-        storage.save(new Resume(UUID_2));
-        storage.save(new Resume(UUID_3));
+        storage.save(RESUME_1);
+        storage.save(RESUME_2);
+        storage.save(RESUME_3);
         initSize = storage.size();
     }
 
@@ -43,16 +56,15 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void save() {
-        Resume r = new Resume("uuid0_save_test");
-        storage.save(r);
-        assertEquals(r, storage.get("uuid0_save_test"));
+        storage.save(RESUME_TEST);
+        assertEquals(RESUME_TEST, storage.get(UUID_TEST));
         // size increased
         assertEquals(initSize + 1, storage.size());
     }
 
     @Test
     protected void saveExist() {
-        assertThrows(ExistStorageException.class, () -> storage.save(new Resume(UUID_1)));
+        assertThrows(ExistStorageException.class, () -> storage.save(RESUME_1));
     }
 
     @Test
@@ -62,12 +74,12 @@ abstract class AbstractArrayStorageTest {
         } catch (StorageException e) {
             fail("Unexpected storage overflow while filling");
         }
-        assertThrows(StorageException.class, () -> storage.save(new Resume(UUID_1)));
+        assertThrows(StorageException.class, () -> storage.save(RESUME_TEST));
     }
 
     @Test
     void get() {
-        assertEquals(new Resume(UUID_1), storage.get(UUID_1));
+        assertEquals(RESUME_1, storage.get(UUID_1));
     }
 
     @Test
@@ -78,7 +90,7 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void getAll() {
-        Resume[] expected = new Resume[]{new Resume(UUID_1), new Resume(UUID_2), new Resume(UUID_3)};
+        Resume[] expected = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
         assertArrayEquals(expected, storage.getAll());
     }
 
@@ -96,10 +108,10 @@ abstract class AbstractArrayStorageTest {
 
     @Test
     void delete() {
-        Resume[] expected = new Resume[]{new Resume(UUID_1), new Resume(UUID_2)};
+        Resume[] expected = new Resume[]{RESUME_1, RESUME_2};
         storage.delete(UUID_3);
         assertArrayEquals(expected, storage.getAll());
-        // size decreased
+        // size decreased - over-check
         assertEquals(initSize - 1, storage.size());
     }
 
