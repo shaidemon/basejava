@@ -10,14 +10,14 @@ public class ListStorage extends AbstractStorage {
     protected List<Resume> storage = new ArrayList<>();
 
     @Override
-    protected void updateStorage(Resume resume, Object key) {
-        storage.set((Integer) key, resume);
+    protected void updateStorage(Resume resume, Object index) {
+        storage.set((Integer) index, resume);
         System.out.printf("Resume %s updated \n", resume.getUuid());
     }
 
     @Override
-    protected Resume getFromStorage(Object key) {
-        return storage.get((Integer) key);
+    protected Resume getFromStorage(Object index) {
+        return storage.get((Integer) index);
     }
 
     @Override
@@ -28,8 +28,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object key) {
-        return (Integer) key >= 0;
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
     }
 
     @Override

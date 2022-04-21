@@ -1,29 +1,19 @@
 package ru.daemon75.basejava.storage;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.fail;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.daemon75.basejava.exception.ExistStorageException;
 import ru.daemon75.basejava.exception.NotExistStorageException;
-import ru.daemon75.basejava.exception.StorageException;
 import ru.daemon75.basejava.model.Resume;
 
-import static ru.daemon75.basejava.storage.AbstractArrayStorage.STORAGE_LIMIT;
+import static org.junit.jupiter.api.Assertions.*;
 
-abstract class AbstractArrayStorageTest {
-
-    protected Storage storage;
-    private int initSize;
+abstract class AbstractStorageTest {
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_TEST = "uuid0_test";
-
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
     private static final Resume RESUME_3;
@@ -36,7 +26,10 @@ abstract class AbstractArrayStorageTest {
         RESUME_TEST = new Resume(UUID_TEST);
     }
 
-    protected AbstractArrayStorageTest(Storage storage) {
+    protected Storage storage;
+    private int initSize;
+
+    protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -67,15 +60,6 @@ abstract class AbstractArrayStorageTest {
         assertThrows(ExistStorageException.class, () -> storage.save(RESUME_1));
     }
 
-    @Test
-    protected void saveOverflow() {
-        try {
-            for (int i = initSize; i < STORAGE_LIMIT; i++) storage.save(new Resume());
-        } catch (StorageException e) {
-            fail("Unexpected storage overflow while filling");
-        }
-        assertThrows(StorageException.class, () -> storage.save(RESUME_TEST));
-    }
 
     @Test
     void get() {

@@ -7,11 +7,29 @@ import ru.daemon75.basejava.model.Resume;
 public abstract class AbstractStorage implements Storage {
 
     public void save(Resume resume) {
-        Object key = checkKeyNotExist(resume.getUuid());
+        Object key = receiveNotExistedKey(resume.getUuid());
         saveToStorage(resume, key);
     }
 
-    private Object checkKeyNotExist(String uuid) {
+
+    public final Resume get(String uuid) {
+        Object key = receiveExistedKey(uuid);
+        return getFromStorage(key);
+    }
+
+
+    public void update(Resume resume) {
+        Object key = receiveExistedKey(resume.getUuid());
+        updateStorage(resume, key);
+    }
+
+
+    public void delete(String uuid) {
+        Object key = receiveExistedKey(uuid);
+        deleteFromStorage(key);
+    }
+
+    private Object receiveNotExistedKey(String uuid) {
         Object key = findKey(uuid);
         if (isExist(key)) {
             throw new ExistStorageException(uuid);
@@ -19,29 +37,12 @@ public abstract class AbstractStorage implements Storage {
         return key;
     }
 
-    private Object checkKeyExist(String uuid) {
+    private Object receiveExistedKey(String uuid) {
         Object key = findKey(uuid);
         if (!isExist(key)) {
             throw new NotExistStorageException(uuid);
         }
         return key;
-    }
-
-    public final Resume get(String uuid) {
-        Object key = checkKeyExist(uuid);
-        return getFromStorage(key);
-    }
-
-
-    public void update(Resume resume) {
-        Object key = checkKeyExist(resume.getUuid());
-        updateStorage(resume, key);
-    }
-
-
-    public void delete(String uuid) {
-        Object key = checkKeyExist(uuid);
-        deleteFromStorage(key);
     }
 
     protected abstract void updateStorage(Resume resume, Object key);

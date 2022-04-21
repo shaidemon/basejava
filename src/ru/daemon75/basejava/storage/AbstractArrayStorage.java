@@ -17,20 +17,21 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     public void saveToStorage(Resume resume, Object key) {
+        int index = (Integer) key;
         String uuid = resume.getUuid();
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Sorry, exceeded the limit of storage. Can't save the resume", uuid);
-        } else {
-            saveToArray(resume, (Integer) key);
-            size++;
-            System.out.printf("resume %s saved \n", uuid);
         }
+        saveToArray(resume, index);
+        size++;
+        System.out.printf("resume %s saved \n", uuid);
+
 
     }
 
     @Override
-    public Resume getFromStorage(Object key) {
-        return storage[(Integer) key];
+    public Resume getFromStorage(Object index) {
+        return storage[(Integer) index];
     }
 
     public Resume[] getAll() {
@@ -38,18 +39,18 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void updateStorage(Resume resume, Object key) {
-        storage[(Integer) key] = resume;
+    public void updateStorage(Resume resume, Object index) {
+        storage[(Integer) index] = resume;
         System.out.printf("Resume %s updated \n", resume.getUuid());
     }
 
     @Override
-    public void deleteFromStorage(Object key) {
-        deleteFromArray((Integer) key);
+    public void deleteFromStorage(Object index) {
+        deleteFromArray((Integer) index);
         // last resume to null
         storage[size - 1] = null;
         size--;
-        System.out.printf("Resume %s deleted \n", key);
+        System.out.printf("Resume %s deleted \n", index);
     }
 
     public void clear() {
@@ -58,11 +59,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    protected boolean isExist(Object key) {
-        return (Integer) key >= 0;
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
     }
-
-    protected abstract Object findKey(String uuid);
 
     protected abstract void saveToArray(Resume resume, int index);
 
