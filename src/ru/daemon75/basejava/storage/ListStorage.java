@@ -3,7 +3,6 @@ package ru.daemon75.basejava.storage;
 import ru.daemon75.basejava.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
@@ -21,9 +20,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    protected void saveToStorage(Resume resume, Object key) {
-        int index = -((Integer) key) - 1;
-        storage.add(index, resume);
+    protected void saveToStorage(Resume resume, Object index) {
+        storage.add(resume);
         System.out.printf("resume %s saved \n", resume.getUuid());
     }
 
@@ -34,8 +32,12 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected Object findKey(String uuid) {
-        Resume searchKey = new Resume(uuid);
-        return Collections.binarySearch(storage, searchKey);
+        for (int i = 0; i < storage.size(); i++) {
+            if (storage.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
