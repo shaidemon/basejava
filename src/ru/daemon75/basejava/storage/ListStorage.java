@@ -1,9 +1,11 @@
 package ru.daemon75.basejava.storage;
 
 import ru.daemon75.basejava.model.Resume;
-
 import java.util.ArrayList;
 import java.util.List;
+/**
+ * ArrayList based storage for Resumes
+ */
 
 public class ListStorage extends AbstractStorage {
     protected List<Resume> storage = new ArrayList<>();

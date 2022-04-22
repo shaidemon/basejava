@@ -1,7 +1,6 @@
 package ru.daemon75.basejava.storage;
 
 import ru.daemon75.basejava.model.Resume;
-
 import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {

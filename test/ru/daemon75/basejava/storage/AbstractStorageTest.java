@@ -18,6 +18,8 @@ abstract class AbstractStorageTest {
     private static final Resume RESUME_2;
     private static final Resume RESUME_3;
     private static final Resume RESUME_TEST;
+    protected Storage storage;
+    private int initSize;
 
     static {
         RESUME_1 = new Resume(UUID_1);
@@ -25,9 +27,6 @@ abstract class AbstractStorageTest {
         RESUME_3 = new Resume(UUID_3);
         RESUME_TEST = new Resume(UUID_TEST);
     }
-
-    protected Storage storage;
-    private int initSize;
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -60,7 +59,6 @@ abstract class AbstractStorageTest {
         assertThrows(ExistStorageException.class, () -> storage.save(RESUME_1));
     }
 
-
     @Test
     void get() {
         assertEquals(RESUME_1, storage.get(UUID_1));
@@ -70,7 +68,6 @@ abstract class AbstractStorageTest {
     protected void getNotExist() {
         assertThrows(NotExistStorageException.class, () -> storage.get("dummy"));
     }
-
 
     @Test
     void getAll() {
@@ -107,6 +104,6 @@ abstract class AbstractStorageTest {
     @Test
     void clear() {
         storage.clear();
-        assertArrayEquals(new Resume[0], storage.getAll());
+        assertEquals(0, storage.getAll().length);
     }
 }

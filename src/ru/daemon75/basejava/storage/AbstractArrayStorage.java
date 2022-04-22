@@ -2,7 +2,6 @@ package ru.daemon75.basejava.storage;
 
 import ru.daemon75.basejava.exception.StorageException;
 import ru.daemon75.basejava.model.Resume;
-
 import java.util.Arrays;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
@@ -16,22 +15,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public void saveToStorage(Resume resume, Object key) {
-        int index = (Integer) key;
+    public void saveToStorage(Resume resume, Object index) {
         String uuid = resume.getUuid();
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Sorry, exceeded the limit of storage. Can't save the resume", uuid);
         }
-        saveToArray(resume, index);
+        saveToArray(resume, (int) index);
         size++;
         System.out.printf("resume %s saved \n", uuid);
-
-
     }
 
     @Override
     public Resume getFromStorage(Object index) {
-        return storage[(Integer) index];
+        return storage[(int) index];
     }
 
     public Resume[] getAll() {
@@ -40,13 +36,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     public void updateStorage(Resume resume, Object index) {
-        storage[(Integer) index] = resume;
+        storage[(int) index] = resume;
         System.out.printf("Resume %s updated \n", resume.getUuid());
     }
 
     @Override
     public void deleteFromStorage(Object index) {
-        deleteFromArray((Integer) index);
+        deleteFromArray((int) index);
         // last resume to null
         storage[size - 1] = null;
         size--;
@@ -60,7 +56,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     protected boolean isExist(Object index) {
-        return (Integer) index >= 0;
+        return (int) index >= 0;
     }
 
     protected abstract void saveToArray(Resume resume, int index);

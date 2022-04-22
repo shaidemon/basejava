@@ -11,18 +11,15 @@ public abstract class AbstractStorage implements Storage {
         saveToStorage(resume, key);
     }
 
-
     public final Resume get(String uuid) {
         Object key = receiveExistedKey(uuid);
         return getFromStorage(key);
     }
 
-
     public void update(Resume resume) {
         Object key = receiveExistedKey(resume.getUuid());
         updateStorage(resume, key);
     }
-
 
     public void delete(String uuid) {
         Object key = receiveExistedKey(uuid);
