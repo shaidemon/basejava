@@ -10,16 +10,16 @@ import java.util.Map;
  */
 
 public class MapStorage extends AbstractStorage {
-    protected Map<Object, Resume> storage = new HashMap<>();
+    protected Map<String, Resume> storage = new HashMap<>();
 
     @Override
     protected void updateStorage(Resume resume, Object key) {
-        storage.put(key, resume);
+        storage.put((String) key, resume);
     }
 
     @Override
     protected Resume getFromStorage(Object key) {
-        return storage.get(key);
+        return storage.get((String) key);
     }
 
     @Override
@@ -34,13 +34,12 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected Object findKey(String uuid) {
-        if (storage.get(uuid) == null) return null;
-        return storage.get(uuid).getUuid();
+        return storage.containsKey(uuid) ? uuid : null;
     }
 
     @Override
     protected void deleteFromStorage(Object key) {
-        storage.remove(key);
+        storage.remove((String) key);
     }
 
     @Override

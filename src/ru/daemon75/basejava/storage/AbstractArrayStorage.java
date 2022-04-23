@@ -2,6 +2,7 @@ package ru.daemon75.basejava.storage;
 
 import ru.daemon75.basejava.exception.StorageException;
 import ru.daemon75.basejava.model.Resume;
+
 import java.util.Arrays;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
@@ -31,7 +32,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     public Resume[] getAll() {
-        return Arrays.copyOfRange(storage, 0, size);
+        return Arrays.copyOf(storage, size);
     }
 
     @Override
