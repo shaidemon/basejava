@@ -3,7 +3,6 @@ package ru.daemon75.basejava.storage;
 import ru.daemon75.basejava.exception.ExistStorageException;
 import ru.daemon75.basejava.exception.NotExistStorageException;
 import ru.daemon75.basejava.model.Resume;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -45,6 +44,12 @@ public abstract class AbstractStorage implements Storage {
         deleteFromStorage(key);
     }
 
+    public List<Resume> getAllSorted() {
+        List<Resume> allList = Arrays.asList(getAll());
+        allList.sort(RESUME_COMPARATOR);
+        return allList;
+    }
+
     private Object receiveNotExistedKey(String uuid) {
         Object key = findKey(uuid);
         if (isExist(key)) {
@@ -53,18 +58,6 @@ public abstract class AbstractStorage implements Storage {
         return key;
     }
 
-    public List<Resume> getAllSorted() {
-        Resume[] allArray = getAll();
-        List<Resume> allList = Arrays.asList(allArray);
-        allList.sort(RESUME_COMPARATOR);
-        for (Resume r: allList) {
-            System.out.println(r);
-        }
-        return allList;
-    }
-
-    public abstract Resume[] getAll();
-
     private Object receiveExistedKey(String uuid) {
         Object key = findKey(uuid);
         if (!isExist(key)) {
@@ -72,6 +65,8 @@ public abstract class AbstractStorage implements Storage {
         }
         return key;
     }
+
+    protected abstract Resume[] getAll();
 
     protected abstract void updateStorage(Resume resume, Object key);
 

@@ -5,10 +5,9 @@ import org.junit.jupiter.api.Test;
 import ru.daemon75.basejava.exception.ExistStorageException;
 import ru.daemon75.basejava.exception.NotExistStorageException;
 import ru.daemon75.basejava.model.Resume;
-
 import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 abstract class AbstractStorageTest {
 
@@ -52,7 +51,6 @@ abstract class AbstractStorageTest {
     void save() {
         storage.save(RESUME_TEST);
         assertEquals(RESUME_TEST, storage.get(UUID_TEST));
-        // size increased
         assertEquals(initSize + 1, storage.size());
     }
 
@@ -72,19 +70,9 @@ abstract class AbstractStorageTest {
     }
 
     @Test
-    void getAll() {
-        Resume[] expected = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
-        Resume[] result = storage.getAll();
-        Arrays.sort(result);
-        assertArrayEquals(expected, result);
-    }
-
-    @Test
     void getAllSorted() {
-        Resume[] expected = new Resume[]{RESUME_2, RESUME_3, RESUME_1};
-        Object[] result = storage.getAllSorted().toArray();
-        assertArrayEquals(expected, result);
-
+        // sort order test - by fullName then uuid
+        assertEquals(Arrays.asList(RESUME_2, RESUME_3, RESUME_1), storage.getAllSorted());
     }
 
     @Test
@@ -102,11 +90,7 @@ abstract class AbstractStorageTest {
     @Test
     void delete() {
         storage.delete(UUID_3);
-        Resume[] expected = new Resume[]{RESUME_1, RESUME_2};
-        Resume[] result = storage.getAll();
-        Arrays.sort(result);
-        assertArrayEquals(expected, result);
-        // size decreased
+        assertEquals(Arrays.asList(RESUME_2, RESUME_1), storage.getAllSorted());
         assertEquals(initSize - 1, storage.size());
     }
 
@@ -118,7 +102,7 @@ abstract class AbstractStorageTest {
     @Test
     void clear() {
         storage.clear();
-        assertEquals(0, storage.getAll().length);
+        assertEquals(0, storage.getAllSorted().size());
         assertEquals(0, storage.size());
     }
 }

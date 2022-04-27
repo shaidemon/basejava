@@ -1,7 +1,6 @@
 package ru.daemon75.basejava.storage;
 
 import ru.daemon75.basejava.model.Resume;
-
 import java.util.List;
 
 /**
@@ -19,7 +18,6 @@ public interface Storage {
 
     void delete(String uuid);
 
-    Resume[] getAll();
     List<Resume> getAllSorted();
 
     int size();
