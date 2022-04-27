@@ -24,9 +24,9 @@ abstract class AbstractStorageTest {
     private int initSize;
 
     static {
-        RESUME_1 = new Resume(UUID_1);
-        RESUME_2 = new Resume(UUID_2);
-        RESUME_3 = new Resume(UUID_3);
+        RESUME_1 = new Resume(UUID_1, "C");
+        RESUME_2 = new Resume(UUID_2, "A");
+        RESUME_3 = new Resume(UUID_3, "A");
         RESUME_TEST = new Resume(UUID_TEST);
     }
 
@@ -77,6 +77,14 @@ abstract class AbstractStorageTest {
         Resume[] result = storage.getAll();
         Arrays.sort(result);
         assertArrayEquals(expected, result);
+    }
+
+    @Test
+    void getAllSorted() {
+        Resume[] expected = new Resume[]{RESUME_2, RESUME_3, RESUME_1};
+        Object[] result = storage.getAllSorted().toArray();
+        assertArrayEquals(expected, result);
+
     }
 
     @Test

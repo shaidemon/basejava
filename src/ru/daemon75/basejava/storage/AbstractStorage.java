@@ -4,7 +4,26 @@ import ru.daemon75.basejava.exception.ExistStorageException;
 import ru.daemon75.basejava.exception.NotExistStorageException;
 import ru.daemon75.basejava.model.Resume;
 
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+
 public abstract class AbstractStorage implements Storage {
+    private final Comparator<Resume> RESUME_COMPARATOR = new fullNameComparator().thenComparing(new uuidComparator());
+
+    static class uuidComparator implements Comparator<Resume> {
+        @Override
+        public int compare(Resume o1, Resume o2) {
+            return o1.getUuid().compareTo(o2.getUuid());
+        }
+    }
+
+    static class fullNameComparator implements Comparator<Resume> {
+        @Override
+        public int compare(Resume o1, Resume o2) {
+            return o1.getFullName().compareTo(o2.getFullName());
+        }
+    }
 
     public void save(Resume resume) {
         Object key = receiveNotExistedKey(resume.getUuid());
@@ -33,6 +52,18 @@ public abstract class AbstractStorage implements Storage {
         }
         return key;
     }
+
+    public List<Resume> getAllSorted() {
+        Resume[] allArray = getAll();
+        List<Resume> allList = Arrays.asList(allArray);
+        allList.sort(RESUME_COMPARATOR);
+        for (Resume r: allList) {
+            System.out.println(r);
+        }
+        return allList;
+    }
+
+    public abstract Resume[] getAll();
 
     private Object receiveExistedKey(String uuid) {
         Object key = findKey(uuid);
