@@ -15,6 +15,15 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
+    public Resume[] getAll() {
+        return Arrays.copyOf(storage, size);
+    }
+
+    public void clear() {
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
+    }
+
     @Override
     public void saveToStorage(Resume resume, Object index) {
         String uuid = resume.getUuid();
@@ -31,10 +40,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return storage[(int) index];
     }
 
-    public Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
-    }
-
     @Override
     public void updateStorage(Resume resume, Object index) {
         storage[(int) index] = resume;
@@ -48,11 +53,6 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         storage[size - 1] = null;
         size--;
         System.out.printf("Resume %s deleted \n", index);
-    }
-
-    public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
     }
 
     @Override

@@ -8,21 +8,8 @@ import java.util.Comparator;
 import java.util.List;
 
 public abstract class AbstractStorage implements Storage {
-    private final Comparator<Resume> RESUME_COMPARATOR = new fullNameComparator().thenComparing(new uuidComparator());
-
-    static class uuidComparator implements Comparator<Resume> {
-        @Override
-        public int compare(Resume o1, Resume o2) {
-            return o1.getUuid().compareTo(o2.getUuid());
-        }
-    }
-
-    static class fullNameComparator implements Comparator<Resume> {
-        @Override
-        public int compare(Resume o1, Resume o2) {
-            return o1.getFullName().compareTo(o2.getFullName());
-        }
-    }
+    protected final Comparator<Resume> RESUME_COMPARATOR = Comparator.comparing(Resume::getFullName).
+            thenComparing(Resume::getUuid);
 
     public void save(Resume resume) {
         Object key = receiveNotExistedKey(resume.getUuid());
@@ -45,9 +32,9 @@ public abstract class AbstractStorage implements Storage {
     }
 
     public List<Resume> getAllSorted() {
-        List<Resume> allList = Arrays.asList(getAll());
-        allList.sort(RESUME_COMPARATOR);
-        return allList;
+        List<Resume> listResume = Arrays.asList(getAll());
+        listResume.sort(RESUME_COMPARATOR);
+        return listResume;
     }
 
     private Object receiveNotExistedKey(String uuid) {

@@ -17,12 +17,12 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
     protected void deleteFromArray(int index) {
         // shift righter elements to left for replace deleted element
-        System.arraycopy(storage, index+1, storage, index, size - index);
+        System.arraycopy(storage, index + 1, storage, index, size - index);
     }
 
     @Override
     protected Object findKey(String uuid) {
-        Resume searchKey = new Resume(uuid);
+        Resume searchKey = new Resume(uuid, "");
         return Arrays.binarySearch(storage, 0, size, searchKey);
     }
 }

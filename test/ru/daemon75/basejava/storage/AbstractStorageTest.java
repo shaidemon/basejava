@@ -6,8 +6,7 @@ import ru.daemon75.basejava.exception.ExistStorageException;
 import ru.daemon75.basejava.exception.NotExistStorageException;
 import ru.daemon75.basejava.model.Resume;
 import java.util.Arrays;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 abstract class AbstractStorageTest {
 
@@ -15,6 +14,10 @@ abstract class AbstractStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
     private static final String UUID_TEST = "uuid0_test";
+    private static final String FULL_NAME_1 = "2full_name1";
+    private static final String FULL_NAME_2 = "1full_name2";
+    private static final String FULL_NAME_3 = "1full_name3";
+    private static final String FULL_NAME_TEST = "full_name_test";
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
     private static final Resume RESUME_3;
@@ -23,10 +26,10 @@ abstract class AbstractStorageTest {
     private int initSize;
 
     static {
-        RESUME_1 = new Resume(UUID_1, "C");
-        RESUME_2 = new Resume(UUID_2, "A");
-        RESUME_3 = new Resume(UUID_3, "A");
-        RESUME_TEST = new Resume(UUID_TEST);
+        RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
+        RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
+        RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
+        RESUME_TEST = new Resume(UUID_TEST, FULL_NAME_TEST);
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -66,7 +69,7 @@ abstract class AbstractStorageTest {
 
     @Test
     protected void getNotExist() {
-        assertThrows(NotExistStorageException.class, () -> storage.get("dummy"));
+        assertThrows(NotExistStorageException.class, () -> storage.get(UUID_TEST));
     }
 
     @Test
@@ -77,14 +80,14 @@ abstract class AbstractStorageTest {
 
     @Test
     void update() {
-        Resume r = new Resume(UUID_3);
+        Resume r = new Resume(UUID_3, FULL_NAME_3);
         storage.update(r);
-        assertEquals(r, storage.get(UUID_3));
+        assertSame(r, storage.get(UUID_3));
     }
 
     @Test
     protected void updateNotExist() {
-        assertThrows(NotExistStorageException.class, () -> storage.update(new Resume("dummy")));
+        assertThrows(NotExistStorageException.class, () -> storage.update(new Resume(UUID_TEST, FULL_NAME_TEST)));
     }
 
     @Test
@@ -96,7 +99,7 @@ abstract class AbstractStorageTest {
 
     @Test
     protected void deleteNotExist() {
-        assertThrows(NotExistStorageException.class, () -> storage.delete("dummy"));
+        assertThrows(NotExistStorageException.class, () -> storage.delete(UUID_TEST));
     }
 
     @Test
